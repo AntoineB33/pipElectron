@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Player App</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay>
+        <source src="../../videos/view.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <script>
+        const { remote } = require('electron');
+        const video = document.getElementById('video');
+
+        // Add event listener for user input (e.g., right arrow key)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                // Close the Electron window when 'Esc' key is pressed
+                remote.getCurrentWindow().close();
+            }
+        });
+
+        // Toggle fullscreen when the video is clicked
+        video.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                video.requestFullscreen().catch(err => {
+                    console.error('Failed to enter fullscreen mode:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Player App</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay>
+        <!-- <source src="../../videos/view.mp4" type="video/mp4"> -->
+        <source id="placeholder" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <script>
+        console.log("videoList");
+        const { remote } = require('electron');
+        console.log("videoList");
+        const fs = require('fs');
+        const video = document.getElementById('video');
+        const placeholder = document.getElementById('placeholder');
+        let videoList = [];
+        let currentVideoIndex = 0;
+
+
+        // Function to load and play the next video
+        function loadNextVideo() {
+            if (currentVideoIndex < videoList.length) {
+                const nextVideoPath = "../../videos/" + videoList[currentVideoIndex];
+                placeholder.src = nextVideoPath;
+                video.load();
+                video.play();
+                currentVideoIndex++;
+            } else {
+                console.log('No more videos to play.');
+            }
+        }
+
+
+        console.log("videoList");
+        // Add event listener for user input (e.g., right arrow key)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                loadNextVideo();
+            } else if (event.key === 'Escape') {
+                // Close the Electron window when 'Esc' key is pressed
+                remote.getCurrentWindow().close();
+            }
+        });
+        console.log("videoList");
+
+        // Read the list of video file paths from the text file
+        fs.readFile('mediaData/t.txt', 'utf8', (err, data) => {
+            console.log("videoList");
+            if (err) {
+                console.error('Error reading video_list.txt:', err);
+                remote.getCurrentWindow().close();
+                return;
+            }
+            // Split the file content by newline to get individual lines
+            const lines = data.split('\n');
+            // Extract video paths after the 6th tab character in each line
+            videoList = lines.map(line => {
+                const tabSeparatedValues = line.split('\t');
+                if (tabSeparatedValues.length > 6) {
+                    return tabSeparatedValues[6].trim(); // Assuming the video path is at index 6
+                }
+                return '';
+            }).filter(path => path !== '');
+            // Load and play the first video
+            console.log(videoList);
+            loadNextVideo();
+        });
+    </script>
+</body>
+</html>
