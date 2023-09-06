@@ -3,10 +3,9 @@ const { app, BrowserWindow, globalShortcut } = require('electron');
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 192, // Set your desired initial width
-    height: 108, // Set your desired initial height
-    x:192,
-    y:108,
+    width: 1920, // Set your desired initial width
+    height: 1080, // Set your desired initial height
+    fullscreen: true, // Start in fullscreen mode
     autoHideMenuBar: true, // Hide the menu bar at the top
     webPreferences: {
       nodeIntegration: true,
